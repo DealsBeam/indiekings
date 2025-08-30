@@ -85,6 +85,9 @@
       [string] Enable Dark Mode (true/false).
       <Variable name="c.enableDarkMode" description="Enable Dark Mode" type="string" default="true" value="true"/>
 
+      [string] Show Breadcrumbs (true/false).
+      <Variable name="c.showBreadcrumbs" description="Show Breadcrumbs" type="string" default="true" value="true"/>
+
       Translatable strings
       =====================
       <Variable name="t.delete" description="t.delete" type="string" value="Delete"/>
@@ -444,86 +447,6 @@
 ======================================================
       =====================*/
 
-/* Dark Mode Toggle */
-.dark-mode-toggle-container {
-  position: absolute;
-  top: 2rem;
-  right: 5.5rem; /* Next to search icon */
-  z-index: 10;
-}
-.dark-mode-toggle-checkbox {
-  display: none;
-}
-.dark-mode-toggle-label {
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  color: #fff;
-  border-radius: 50%;
-  transition: background-color 0.2s;
-}
-.dark-mode-toggle-label:hover {
-  background-color: rgba(255,255,255,0.1);
-}
-.dark-mode-toggle-label .i {
-  --i-size: 22px;
-}
-.dark-mode-toggle-label .i-moon { display: none; }
-.dark-mode-toggle-label .i-sun { display: block; }
-
-.dark-mode-toggle-checkbox:checked ~ .dark-mode-toggle-label .i-moon { display: block; }
-.dark-mode-toggle-checkbox:checked ~ .dark-mode-toggle-label .i-sun { display: none; }
-
-/* Dark Theme Colors */
-html[data-theme='dark'] {
-  --body-background-color: #1a1a1a;
-  --bg-body: #212121;
-  --bg-post: #2c2c2c;
-  --bg-sidebar: #282828;
-  --color-title: #e2e2e2;
-  --color-text: #bdbdbd;
-  --color-border: #444;
-  --color-header-subtitle: #ccc;
-  --typo-code-background: #333;
-  --typo-border-color: #444;
-}
-
-html[data-theme='dark'] .card-content.has-image {
-  --card-body-bg: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.85) 100%);
-}
-
-html[data-theme='dark'] .switch {
-  color: #fff;
-}
-
-html[data-theme='dark'] .searchbox-input {
-  color: #fff;
-  border-bottom-color: #fff;
-}
-
-html[data-theme='dark'] .searchbox-input::placeholder {
-  color: #fff;
-}
-
-html[data-theme='dark'] .sidebar {
-  background-color: rgba(33, 33, 33, 0.9);
-}
-
-/* Related Posts */
-.related-posts-container {
-  margin-top: 3rem;
-}
-.related-posts-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  color: var(--color-title);
-  font-family: var(--font-title-family);
-}
-
 /* Back to Top Button */
 #back-to-top {
   position: fixed;
@@ -772,6 +695,88 @@ a::after {
 a:hover::after {
   transform: scaleX(1);
   transform-origin: bottom left;
+}
+
+/* Dark Mode */
+:root[data-theme="dark"] {
+  --bg-body: #121212;
+  --bg-post: #1e1e1e;
+  --bg-sidebar: #1e1e1e;
+  --color-title: #e0e0e0;
+  --color-text: #bdbdbd;
+  --color-border: #333;
+  --color-header-title: #e0e0e0;
+  --color-header-subtitle: #9e9e9e;
+  --typo-border-color: #424242;
+  --typo-code-background: #2c2c2c;
+}
+#dark-mode-toggle {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+  cursor: pointer;
+  background-color: var(--bg-post);
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+#dark-mode-toggle .i {
+  width: 24px;
+  height: 24px;
+  color: var(--color-text);
+}
+#dark-mode-toggle .sun-icon { display: none; }
+:root[data-theme="dark"] #dark-mode-toggle .moon-icon { display: none; }
+:root[data-theme="dark"] #dark-mode-toggle .sun-icon { display: block; }
+
+
+/* Breadcrumbs */
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: .75rem 0;
+  margin-bottom: 1.5rem;
+  font-size: .9rem;
+  color: var(--color-text);
+}
+.breadcrumbs a {
+  color: var(--primary);
+  text-decoration: none;
+}
+.breadcrumbs a:hover {
+  text-decoration: underline;
+}
+.breadcrumbs .separator {
+  margin: 0 .5rem;
+  color: var(--color-border);
+}
+.breadcrumbs .current {
+  color: var(--color-title);
+  font-weight: 500;
+}
+
+/* Related Posts */
+.related-posts {
+  margin-top: 3rem;
+}
+.related-posts-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: var(--color-title);
+  padding-bottom: .5rem;
+  border-bottom: 2px solid var(--primary);
+  display: inline-block;
+}
+.related-posts .cards {
+  grid-template-columns: repeat(auto-fill,minmax(min(100%,15rem),1fr));
+  gap: 1.5rem;
 }
 
 ]]></b:skin>
@@ -1061,6 +1066,31 @@ a:hover::after {
           </b:if>
         </b:with>
       </b:includable>
+      <b:includable id='global:svg-sprite'>
+        <div style='display:none;'>
+          <svg xmlns='http://www.w3.org/2000/svg'>
+            <symbol id='icon-moon' viewBox='0 0 24 24'>
+              <path d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/>
+            </symbol>
+            <symbol id='icon-sun' viewBox='0 0 24 24'>
+              <circle cx='12' cy='12' r='5' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/>
+              <line x1='12' y1='1' x2='12' y2='3' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/>
+              <line x1='12' y1='21' x2='12' y2='23' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/>
+              <line x1='4.22' y1='4.22' x2='5.64' y2='5.64' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/>
+              <line x1='18.36' y1='18.36' x2='19.78' y2='19.78' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/>
+              <line x1='1' y1='12' x2='3' y2='12' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/>
+              <line x1='21' y1='12' x2='23' y2='12' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/>
+              <line x1='4.22' y1='19.78' x2='5.64' y2='18.36' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/>
+              <line x1='18.36' y1='5.64' x2='19.78' y2='4.22' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'/>
+            </symbol>
+            <symbol id='icon-circle-check' viewBox='0 0 24 24'><circle cx='12' cy='12' r='10'/><path d='m8.5 12.5 2 2 5-5'/></symbol>
+            <symbol id='icon-bars' viewBox='0 0 24 24'><path d='M3 6h18M3 12h18M3 18h18'/></symbol>
+            <symbol id='icon-search' viewBox='0 0 24 24'><circle cx='10' cy='10' r='7'/><path d='m15 15 6 6'/></symbol>
+            <symbol id='icon-arrow-left-long' viewBox='0 0 24 24'><path d='m6 9-3 3 3 3m15-3H3'/></symbol>
+            <symbol id='icon-arrow-right-long' viewBox='0 0 24 24'><path d='m18 9 3 3-3 3M3 12h18'/></symbol>
+          </svg>
+        </div>
+      </b:includable>
       <!-- =========================
   @meta - Document Meta Tags (charset, viewport, SEO)
 ========================= -->
@@ -1288,10 +1318,7 @@ a:hover::after {
               <data:comment.author/>
               <b:if cond='data:comment.extraIconClass'>
                 <span class='comment-badge'>
-                  <svg class='i i-circle-check' viewBox='0 0 24 24'>
-                    <circle cx='12' cy='12' r='10'/>
-                    <path d='m8.5 12.5 2 2 5-5'/>
-                  </svg>
+                  <svg class='i i-circle-check'><use href='#icon-circle-check'/></svg>
                 </span>
               </b:if>
             </b:tag>
@@ -1410,21 +1437,101 @@ a:hover::after {
         <b:tag class='blog-pager' cond='data:newerPageUrl or data:olderPageUrl' id='blog-pager' name='div'>
           <b:if cond='data:newerPageUrl'>
             <a class='pager-button' expr:aria-label='data:messages.newerPosts' expr:href='data:newerPageUrl' rel='nofollow'>
-              <svg class='i i-arrow-left-long' viewBox='0 0 24 24'>
-                <path d='m6 9-3 3 3 3m15-3H3'/>
-              </svg>
+              <svg class='i i-arrow-left-long'><use href='#icon-arrow-left-long'/></svg>
             </a>
           </b:if>
           <b:if cond='data:olderPageUrl'>
             <a class='pager-button' expr:aria-label='data:messages.olderPosts' expr:href='data:olderPageUrl' rel='nofollow'>
-              <svg class='i i-arrow-right-long' viewBox='0 0 24 24'>
-                <path d='m18 9 3 3-3 3M3 12h18'/>
-              </svg>
+              <svg class='i i-arrow-right-long'><use href='#icon-arrow-right-long'/></svg>
             </a>
           </b:if>
         </b:tag>
       </b:includable>
+      <b:includable id='post:breadcrumbs'>
+        <b:if cond='data:view.isPost and data:skin.vars.c.showBreadcrumbs == &quot;true&quot;'>
+          <div class='breadcrumbs' vocab='https://schema.org/' typeof='BreadcrumbList'>
+            <span property='itemListElement' typeof='ListItem'>
+              <a expr:href='data:blog.homepageUrl' property='item' typeof='WebPage'>
+                <span property='name'><data:messages.home/></span>
+              </a>
+              <meta expr:content='1' property='position'/>
+            </span>
+            <b:if cond='data:post.labels'>
+              <span class='separator'>/</span>
+              <span property='itemListElement' typeof='ListItem'>
+                <a expr:href='data:post.labels.first.url' property='item' typeof='WebPage'>
+                  <span property='name'><data:post.labels.first.name/></span>
+                </a>
+                <meta expr:content='2' property='position'/>
+              </span>
+            </b:if>
+            <span class='separator'>/</span>
+            <span class='current' property='itemListElement' typeof='ListItem'>
+              <span property='name'><data:post.title/></span>
+              <meta expr:content='3' property='position'/>
+            </span>
+          </div>
+        </b:if>
+      </b:includable>
+      <b:includable id='post:related' var='post'>
+        <b:if cond='data:view.isPost and data:post.labels and data:post.labels.size > 0'>
+          <b:with value='data:post.labels.first.name' var='labelName'>
+            <b:if cond='data:labelName'>
+              <div class='related-posts' expr:id='&quot;related-posts-&quot; + data:post.id'>
+                <h2 class='related-posts-title'>You might also like...</h2>
+                <div class='related-posts-container'>
+                  <!-- Related Posts will be loaded here by JavaScript -->
+                </div>
+              </div>
+              <script>
+              //<![CDATA[
+                function renderRelated(json) {
+                  var container = document.querySelector('#related-posts-<data:post.id/> .related-posts-container');
+                  var relatedPostsWrapper = document.querySelector('#related-posts-<data:post.id/>');
+                  if (!container || !relatedPostsWrapper || !json.feed.entry) {
+                    if(relatedPostsWrapper) relatedPostsWrapper.style.display = 'none';
+                    return;
+                  }
+
+                  var entries = json.feed.entry.filter(function(e) {
+                    return e.id.$t.split('post-')[1] !== '<data:post.id/>';
+                  });
+
+                  if (entries.length === 0) {
+                     if(relatedPostsWrapper) relatedPostsWrapper.style.display = 'none';
+                    return;
+                  }
+
+                  var html = '<div class="cards">';
+                  for (var i = 0; i < entries.length && i < 3; i++) {
+                    var entry = entries[i];
+                    var title = entry.title.$t;
+                    var url = '';
+                    for (var k = 0; k < entry.link.length; k++) {
+                      if (entry.link[k].rel == 'alternate') {
+                        url = entry.link[k].href;
+                        break;
+                      }
+                    }
+                    var thumb = ('media$thumbnail' in entry) ? entry.media$thumbnail.url.replace(/\/s\d+-c\//, '/w400-h400-p-k-no-nu/') : 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEixI-gVAA4q93eD_2j4h2I2g2-9S3MwzY2y2HEIsVp_2sC4cW4_M4n-2hXJGp8M-Q-c-r-s-t-u-v-w-x-y-z/s1600/no-image.png';
+
+                    html += '<article class="card"><a class="card-content has-image" href="' + url + '"><img class="card-image" src="' + thumb + '" alt="' + title + '" loading="lazy" decoding="async"/><div class="card-meta"><h2 class="card-title">' + title + '</h2></div></a></article>';
+                  }
+                  html += '</div>';
+                  container.innerHTML = html;
+                }
+
+                var script = document.createElement('script');
+                script.src = '/feeds/posts/default/-/' + encodeURIComponent('<data:labelName/>') + '?alt=json-in-script&callback=renderRelated&max-results=4';
+                document.body.appendChild(script);
+              //]]>
+              </script>
+            </b:if>
+          </b:with>
+        </b:if>
+      </b:includable>
       <b:includable id='post:view'>
+        <b:include name='post:breadcrumbs'/>
         <header class='post-header'>
           <h1 class='post-title'><data:post.title.escaped/></h1>
           <b:if cond='data:view.isPost'>
@@ -1436,97 +1543,12 @@ a:hover::after {
           <data:post.body/>
           <b:include name='post:ads2'/>
         </section>
+        <b:include data='post' name='post:related'/>
         <footer class='post-comment'>
           <b:include data='{ depth: 2, texts: { delete: data:skin.vars.t_delete, reply: data:skin.vars.t_reply } }' name='comment:main'/>
         </footer>
-        <b:include data='data:post' name='post:related'/>
         <b:include name='postMetadataJSON'/>
       </b:includable>
-
-      <b:includable id='post:related' var='post'>
-        <b:if cond='data:view.isPost and data:post.labels and data:post.labels.size &gt; 0'>
-          <div class='related-posts-container'>
-            <h3 class='related-posts-title'>You might also like</h3>
-            <div class='related-posts-content cards' id='related-posts'/>
-            <script>
-            /*<![CDATA[*/
-              (function() {
-                var container = document.getElementById('related-posts');
-                if (!container) return;
-
-                var currentPostId = '<data:post.id/>';
-                var labels = [<b:loop values='data:post.labels' var='label'>'<data:label.name/>'<b:if cond='!data:label.isLast'>, </b:if></b:loop>];
-
-                if (labels.length === 0) {
-                  var wrapper = document.querySelector('.related-posts-container');
-                  if(wrapper) wrapper.style.display = 'none';
-                  return;
-                }
-
-                var firstLabel = encodeURIComponent(labels[0]);
-                var feedUrl = '/feeds/posts/default/-/' + firstLabel + '?alt=json&max-results=4';
-
-                fetch(feedUrl)
-                  .then(function(response) { return response.json(); })
-                  .then(function(data) {
-                    var entries = data.feed.entry || [];
-                    var html = '';
-                    var relatedPostsFound = 0;
-
-                    entries.forEach(function(entry) {
-                      if (relatedPostsFound >= 3) return;
-
-                      var postId = entry.id.$t.split('post-')[1];
-                      if (postId === currentPostId) return;
-
-                      var postTitle = entry.title.$t;
-                      var postUrl = '';
-                      for (var i = 0; i < entry.link.length; i++) {
-                        if (entry.link[i].rel === 'alternate') {
-                          postUrl = entry.link[i].href;
-                          break;
-                        }
-                      }
-
-                      var thumbnailUrl = 'media$thumbnail' in entry ? entry.media$thumbnail.url.replace('/s72-c/', '/w400-h300-c/') : '';
-                      if (!thumbnailUrl && 'content' in entry) {
-                          var content = document.createElement('div');
-                          content.innerHTML = entry.content.$t;
-                          var img = content.querySelector('img');
-                          if (img) thumbnailUrl = img.src;
-                      }
-
-                      html += '<article class="card">';
-                      html += '<a class="card-content' + (thumbnailUrl ? ' has-image' : '') + '" href="' + postUrl + '">';
-                      if (thumbnailUrl) {
-                          html += '<img class="card-image" src="' + thumbnailUrl + '" loading="lazy" alt="' + postTitle + '"/>';
-                      }
-                      html += '<div class="card-meta">';
-                      html += '<h2 class="card-title">' + postTitle + '</h2>';
-                      html += '</div></a></article>';
-
-                      relatedPostsFound++;
-                    });
-
-                    if (relatedPostsFound > 0) {
-                      container.innerHTML = html;
-                    } else {
-                      var wrapper = document.querySelector('.related-posts-container');
-                      if(wrapper) wrapper.style.display = 'none';
-                    }
-                  })
-                  .catch(function(error) {
-                    console.error('Error fetching related posts:', error);
-                    var wrapper = document.querySelector('.related-posts-container');
-                    if(wrapper) wrapper.style.display = 'none';
-                  });
-              })();
-            /*]]>*/
-            </script>
-          </div>
-        </b:if>
-      </b:includable>
-
       <b:includable id='widget:AdSense'>
         <b:include name='@ads'/>
       </b:includable>
@@ -1625,9 +1647,7 @@ a:hover::after {
         <b:else/>
           <b:attr name='class' value='header-wrapper'/>
           <label class='header-bars switch' for='show-sidebar'>
-            <svg class='i i-bars' viewBox='0 0 24 24'>
-              <path d='M3 6h18M3 12h18M3 18h18'/>
-            </svg>
+            <svg class='i i-bars'><use href='#icon-bars'/></svg>
           </label>
           <div class='container'>
             <b:if cond='data:image'>
@@ -1648,20 +1668,8 @@ a:hover::after {
               </div>
             </b:if>
           </div>
-          <b:if cond='data:skin.vars.c_enableDarkMode == &quot;true&quot;'>
-            <div class='dark-mode-toggle-container'>
-              <input class='dark-mode-toggle-checkbox' id='dark-mode-toggle' type='checkbox'/>
-              <label class='dark-mode-toggle-label' for='dark-mode-toggle' expr:aria-label='&quot;Dark Mode Toggle&quot;'>
-                <svg class='i i-sun' viewBox='0 0 24 24' stroke-width='1.5'><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-                <svg class='i i-moon' viewBox='0 0 24 24' stroke-width='1.5'><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-              </label>
-            </div>
-          </b:if>
           <label class='header-search switch' for='show-search'>
-            <svg class='i i-search' viewBox='0 0 24 24'>
-              <circle cx='10' cy='10' r='7'/>
-              <path d='m15 15 6 6'/>
-            </svg>
+            <svg class='i i-search'><use href='#icon-search'/></svg>
           </label>
         </b:if>
       </b:includable>
@@ -1778,6 +1786,7 @@ a:hover::after {
 </head>
 
 <body>
+  <b:include name='global:svg-sprite'/>
   <b:include name='@kind'/>
   <b:tag class='layout-edit' cond='data:view.isLayoutMode and data:skin.vars.a_layoutEdit' name='div'>
   <input class='switch-control switch-sidebar' id='show-sidebar' name='offcanvas' type='checkbox'/>
@@ -2080,6 +2089,54 @@ a:hover::after {
   </b:tag>
   </b:tag>
 
+<b:if cond='data:skin.vars.c.enableDarkMode == &quot;true&quot;'>
+  <div id='dark-mode-toggle' title='Toggle Dark Mode'>
+    <svg class='i moon-icon'><use href='#icon-moon'/></svg>
+    <svg class='i sun-icon'><use href='#icon-sun'/></svg>
+  </div>
+  <script>
+  //<![CDATA[
+    (function() {
+      var toggle = document.getElementById('dark-mode-toggle');
+      if (!toggle) return;
+
+      var B_DARK_MODE_COOKIE = 'ik_dark_mode';
+      var B_DARK_MODE_ENABLED_CLASS = 'dark';
+      var B_ROOT = document.documentElement;
+
+      var darkMode = {
+        isEnabled: function() {
+          return document.cookie.includes(B_DARK_MODE_COOKIE + '=' + B_DARK_MODE_ENABLED_CLASS);
+        },
+        enable: function() {
+          B_ROOT.setAttribute('data-theme', 'dark');
+          toggle.setAttribute('aria-pressed', 'true');
+          var expires = new Date(Date.now() + 31536000000).toUTCString(); // 1 year
+          document.cookie = B_DARK_MODE_COOKIE + '=' + B_DARK_MODE_ENABLED_CLASS + ';path=/;expires=' + expires;
+        },
+        disable: function() {
+          B_ROOT.removeAttribute('data-theme');
+          toggle.setAttribute('aria-pressed', 'false');
+          var expires = new Date(0).toUTCString();
+          document.cookie = B_DARK_MODE_COOKIE + '=;path=/;expires=' + expires;
+        }
+      };
+
+      if (darkMode.isEnabled()) {
+        darkMode.enable();
+      }
+
+      toggle.addEventListener('click', function() {
+        if (darkMode.isEnabled()) {
+          darkMode.disable();
+        } else {
+          darkMode.enable();
+        }
+      });
+    })();
+  //]]>
+  </script>
+</b:if>
 <!-- Back to Top Button -->
 <a aria-label='Back to top' href='#top' id='back-to-top'>&#8593;</a>
 <script>
@@ -2120,52 +2177,5 @@ window.addEventListener(&#39;scroll&#39;, function() {
   }
 })();
 </script>
-
-<b:if cond='data:skin.vars.c_enableDarkMode == &quot;true&quot;'>
-<script>
-/*<![CDATA[*/
-(function() {
-  'use strict';
-  var toggle = document.getElementById('dark-mode-toggle');
-  if (!toggle) { return; }
-
-  var html = document.documentElement;
-  var lsTheme = localStorage.getItem('theme');
-  var osDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-  function setTheme(isDark) {
-    if (isDark) {
-      html.setAttribute('data-theme', 'dark');
-      toggle.checked = true;
-    } else {
-      html.setAttribute('data-theme', 'light');
-      toggle.checked = false;
-    }
-  }
-
-  if (lsTheme === 'dark') {
-    setTheme(true);
-  } else if (lsTheme === 'light') {
-    setTheme(false);
-  } else {
-    setTheme(osDark);
-  }
-
-  toggle.addEventListener('change', function() {
-    var isChecked = this.checked;
-    setTheme(isChecked);
-    localStorage.setItem('theme', isChecked ? 'dark' : 'light');
-  });
-
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-    // Only change if user has no explicit preference stored
-    if (!localStorage.getItem('theme')) {
-      setTheme(e.matches);
-    }
-  });
-})();
-/*]]>*/
-</script>
-</b:if>
 </body>
 </html>

@@ -82,6 +82,9 @@
       [image] Url of default Open Graph image.
       <Variable name="c.ogImage" description="c.ogImage" type="string" value=""/>
 
+      [boolean] Enable Dark Mode.
+      <Variable name="c.enableDarkMode" description="Enable Dark Mode" type="boolean" default="true" value="true"/>
+
       Translatable strings
       =====================
       <Variable name="t.delete" description="t.delete" type="string" value="Delete"/>
@@ -440,6 +443,86 @@
    CUSTOM STYLES (Site-specific additions)
 ======================================================
       =====================*/
+
+/* Dark Mode Toggle */
+.dark-mode-toggle-container {
+  position: absolute;
+  top: 2rem;
+  right: 5.5rem; /* Next to search icon */
+  z-index: 10;
+}
+.dark-mode-toggle-checkbox {
+  display: none;
+}
+.dark-mode-toggle-label {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  color: #fff;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+.dark-mode-toggle-label:hover {
+  background-color: rgba(255,255,255,0.1);
+}
+.dark-mode-toggle-label .i {
+  --i-size: 22px;
+}
+.dark-mode-toggle-label .i-moon { display: none; }
+.dark-mode-toggle-label .i-sun { display: block; }
+
+.dark-mode-toggle-checkbox:checked ~ .dark-mode-toggle-label .i-moon { display: block; }
+.dark-mode-toggle-checkbox:checked ~ .dark-mode-toggle-label .i-sun { display: none; }
+
+/* Dark Theme Colors */
+html[data-theme='dark'] {
+  --body-background-color: #1a1a1a;
+  --bg-body: #212121;
+  --bg-post: #2c2c2c;
+  --bg-sidebar: #282828;
+  --color-title: #e2e2e2;
+  --color-text: #bdbdbd;
+  --color-border: #444;
+  --color-header-subtitle: #ccc;
+  --typo-code-background: #333;
+  --typo-border-color: #444;
+}
+
+html[data-theme='dark'] .card-content.has-image {
+  --card-body-bg: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.85) 100%);
+}
+
+html[data-theme='dark'] .switch {
+  color: #fff;
+}
+
+html[data-theme='dark'] .searchbox-input {
+  color: #fff;
+  border-bottom-color: #fff;
+}
+
+html[data-theme='dark'] .searchbox-input::placeholder {
+  color: #fff;
+}
+
+html[data-theme='dark'] .sidebar {
+  background-color: rgba(33, 33, 33, 0.9);
+}
+
+/* Related Posts */
+.related-posts-container {
+  margin-top: 3rem;
+}
+.related-posts-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: var(--color-title);
+  font-family: var(--font-title-family);
+}
 
 /* Back to Top Button */
 #back-to-top {
@@ -1356,8 +1439,94 @@ a:hover::after {
         <footer class='post-comment'>
           <b:include data='{ depth: 2, texts: { delete: data:skin.vars.t_delete, reply: data:skin.vars.t_reply } }' name='comment:main'/>
         </footer>
+        <b:include data='data:post' name='post:related'/>
         <b:include name='postMetadataJSON'/>
       </b:includable>
+
+      <b:includable id='post:related' var='post'>
+        <b:if cond='data:view.isPost and data:post.labels and data:post.labels.size &gt; 0'>
+          <div class='related-posts-container'>
+            <h3 class='related-posts-title'>You might also like</h3>
+            <div class='related-posts-content cards' id='related-posts'/>
+            <script>
+            /*<![CDATA[*/
+              (function() {
+                var container = document.getElementById('related-posts');
+                if (!container) return;
+
+                var currentPostId = '<data:post.id/>';
+                var labels = [<b:loop values='data:post.labels' var='label'>'<data:label.name/>'<b:if cond='!data:label.isLast'>, </b:if></b:loop>];
+
+                if (labels.length === 0) {
+                  var wrapper = document.querySelector('.related-posts-container');
+                  if(wrapper) wrapper.style.display = 'none';
+                  return;
+                }
+
+                var firstLabel = encodeURIComponent(labels[0]);
+                var feedUrl = '/feeds/posts/default/-/' + firstLabel + '?alt=json&max-results=4';
+
+                fetch(feedUrl)
+                  .then(function(response) { return response.json(); })
+                  .then(function(data) {
+                    var entries = data.feed.entry || [];
+                    var html = '';
+                    var relatedPostsFound = 0;
+
+                    entries.forEach(function(entry) {
+                      if (relatedPostsFound >= 3) return;
+
+                      var postId = entry.id.$t.split('post-')[1];
+                      if (postId === currentPostId) return;
+
+                      var postTitle = entry.title.$t;
+                      var postUrl = '';
+                      for (var i = 0; i < entry.link.length; i++) {
+                        if (entry.link[i].rel === 'alternate') {
+                          postUrl = entry.link[i].href;
+                          break;
+                        }
+                      }
+
+                      var thumbnailUrl = 'media$thumbnail' in entry ? entry.media$thumbnail.url.replace('/s72-c/', '/w400-h300-c/') : '';
+                      if (!thumbnailUrl && 'content' in entry) {
+                          var content = document.createElement('div');
+                          content.innerHTML = entry.content.$t;
+                          var img = content.querySelector('img');
+                          if (img) thumbnailUrl = img.src;
+                      }
+
+                      html += '<article class="card">';
+                      html += '<a class="card-content' + (thumbnailUrl ? ' has-image' : '') + '" href="' + postUrl + '">';
+                      if (thumbnailUrl) {
+                          html += '<img class="card-image" src="' + thumbnailUrl + '" loading="lazy" alt="' + postTitle + '"/>';
+                      }
+                      html += '<div class="card-meta">';
+                      html += '<h2 class="card-title">' + postTitle + '</h2>';
+                      html += '</div></a></article>';
+
+                      relatedPostsFound++;
+                    });
+
+                    if (relatedPostsFound > 0) {
+                      container.innerHTML = html;
+                    } else {
+                      var wrapper = document.querySelector('.related-posts-container');
+                      if(wrapper) wrapper.style.display = 'none';
+                    }
+                  })
+                  .catch(function(error) {
+                    console.error('Error fetching related posts:', error);
+                    var wrapper = document.querySelector('.related-posts-container');
+                    if(wrapper) wrapper.style.display = 'none';
+                  });
+              })();
+            /*]]>*/
+            </script>
+          </div>
+        </b:if>
+      </b:includable>
+
       <b:includable id='widget:AdSense'>
         <b:include name='@ads'/>
       </b:includable>
@@ -1479,6 +1648,15 @@ a:hover::after {
               </div>
             </b:if>
           </div>
+          <b:if cond='data:skin.vars.c_enableDarkMode'>
+            <div class='dark-mode-toggle-container'>
+              <input class='dark-mode-toggle-checkbox' id='dark-mode-toggle' type='checkbox'/>
+              <label class='dark-mode-toggle-label' for='dark-mode-toggle' expr:aria-label='&quot;Dark Mode Toggle&quot;'>
+                <svg class='i i-sun' viewBox='0 0 24 24' stroke-width='1.5'><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                <svg class='i i-moon' viewBox='0 0 24 24' stroke-width='1.5'><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+              </label>
+            </div>
+          </b:if>
           <label class='header-search switch' for='show-search'>
             <svg class='i i-search' viewBox='0 0 24 24'>
               <circle cx='10' cy='10' r='7'/>
@@ -1942,5 +2120,52 @@ window.addEventListener(&#39;scroll&#39;, function() {
   }
 })();
 </script>
+
+<b:if cond='data:skin.vars.c_enableDarkMode'>
+<script>
+/*<![CDATA[*/
+(function() {
+  'use strict';
+  var toggle = document.getElementById('dark-mode-toggle');
+  if (!toggle) { return; }
+
+  var html = document.documentElement;
+  var lsTheme = localStorage.getItem('theme');
+  var osDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  function setTheme(isDark) {
+    if (isDark) {
+      html.setAttribute('data-theme', 'dark');
+      toggle.checked = true;
+    } else {
+      html.setAttribute('data-theme', 'light');
+      toggle.checked = false;
+    }
+  }
+
+  if (lsTheme === 'dark') {
+    setTheme(true);
+  } else if (lsTheme === 'light') {
+    setTheme(false);
+  } else {
+    setTheme(osDark);
+  }
+
+  toggle.addEventListener('change', function() {
+    var isChecked = this.checked;
+    setTheme(isChecked);
+    localStorage.setItem('theme', isChecked ? 'dark' : 'light');
+  });
+
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+    // Only change if user has no explicit preference stored
+    if (!localStorage.getItem('theme')) {
+      setTheme(e.matches);
+    }
+  });
+})();
+/*]]>*/
+</script>
+</b:if>
 </body>
 </html>

@@ -82,11 +82,10 @@
       [image] Url of default Open Graph image.
       <Variable name="c.ogImage" description="c.ogImage" type="string" value=""/>
 
-      [string] Enable Dark Mode (true/false).
-      <Variable name="c.enableDarkMode" description="Enable Dark Mode" type="string" default="true" value="true"/>
-
-      [string] Show Breadcrumbs (true/false).
-      <Variable name="c.showBreadcrumbs" description="Show Breadcrumbs" type="string" default="true" value="true"/>
+      <Group description="Theme Features">
+        <Variable name="c.enableDarkMode" description="Enable Dark Mode" type="string" default="true" value="true"/>
+        <Variable name="c.showBreadcrumbs" description="Show Breadcrumbs" type="string" default="true" value="true"/>
+      </Group>
 
       Translatable strings
       =====================

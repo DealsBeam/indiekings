@@ -82,8 +82,8 @@
       [image] Url of default Open Graph image.
       <Variable name="c.ogImage" description="c.ogImage" type="string" value=""/>
 
-      [boolean] Enable Dark Mode.
-      <Variable name="c.enableDarkMode" description="Enable Dark Mode" type="boolean" default="true" value="true"/>
+      [string] Enable Dark Mode (true/false).
+      <Variable name="c.enableDarkMode" description="Enable Dark Mode" type="string" default="true" value="true"/>
 
       Translatable strings
       =====================
@@ -1648,7 +1648,7 @@ a:hover::after {
               </div>
             </b:if>
           </div>
-          <b:if cond='data:skin.vars.c_enableDarkMode'>
+          <b:if cond='data:skin.vars.c_enableDarkMode == &quot;true&quot;'>
             <div class='dark-mode-toggle-container'>
               <input class='dark-mode-toggle-checkbox' id='dark-mode-toggle' type='checkbox'/>
               <label class='dark-mode-toggle-label' for='dark-mode-toggle' expr:aria-label='&quot;Dark Mode Toggle&quot;'>
@@ -2121,7 +2121,7 @@ window.addEventListener(&#39;scroll&#39;, function() {
 })();
 </script>
 
-<b:if cond='data:skin.vars.c_enableDarkMode'>
+<b:if cond='data:skin.vars.c_enableDarkMode == &quot;true&quot;'>
 <script>
 /*<![CDATA[*/
 (function() {

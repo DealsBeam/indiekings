@@ -1249,6 +1249,7 @@ a:hover::after {
   <meta content='IndieKings' name='author'/>
   <meta content='@IndieKings' name='twitter:creator'/>
   <meta content='en_US' property='og:locale'/>
+  <b:include cond='data:view.isSingleItem' data='view.post' name='post:review-schema'/>
 </b:includable>
       <b:includable id='@picture'>
         <b:if cond='data:src'>
@@ -1682,6 +1683,55 @@ a:hover::after {
           })();
         //]]>
         </script>
+      </b:includable>
+      <b:includable id='post:review-schema' var='post'>
+        <b:if cond='data:view.isSingleItem and data:post.labels any (label => label.name == "Review")'>
+          <script>
+          //<![CDATA[
+            (function() {
+              var reviewDataEl = document.getElementById('review-data');
+              if (!reviewDataEl) {
+                return;
+              }
+
+              var itemName = reviewDataEl.getAttribute('data-item-reviewed');
+              var ratingValue = reviewDataEl.getAttribute('data-rating-value');
+              var bestRating = reviewDataEl.getAttribute('data-best-rating') || '5';
+
+              if (!itemName || !ratingValue) {
+                return;
+              }
+
+              var schema = {
+                '@context': 'https://schema.org',
+                '@type': 'Review',
+                'itemReviewed': {
+                  '@type': 'VideoGame',
+                  'name': itemName
+                },
+                'reviewRating': {
+                  '@type': 'Rating',
+                  'ratingValue': ratingValue,
+                  'bestRating': bestRating
+                },
+                'author': {
+                  '@type': 'Person',
+                  'name': '<data:post.author.name.escaped/>'
+                },
+                'publisher': {
+                  '@type': 'Organization',
+                  'name': '<data:blog.title.escaped/>'
+                }
+              };
+
+              var scriptEl = document.createElement('script');
+              scriptEl.type = 'application/ld+json';
+              scriptEl.textContent = JSON.stringify(schema);
+              document.head.appendChild(scriptEl);
+            })();
+          //]]>
+          </script>
+        </b:if>
       </b:includable>
       <b:includable id='post:view'>
         <b:include name='post:breadcrumbs'/>

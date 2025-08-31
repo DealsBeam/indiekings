@@ -783,6 +783,56 @@ a:hover::after {
   gap: 1.5rem;
 }
 
+/* Social Share Buttons */
+.share-buttons {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-border);
+}
+.share-buttons-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--color-title);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.share-buttons-list {
+  display: flex;
+  justify-content: center;
+  gap: .75rem;
+  flex-wrap: wrap;
+}
+.share-button {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  color: var(--color-text);
+  font-size: .9rem;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  background-color: var(--bg-body);
+}
+.share-button:hover {
+  background-color: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+.share-button .i {
+  width: 20px;
+  height: 20px;
+}
+.share-button-text {
+  display: none;
+}
+@media (min-width: 768px) {
+  .share-button-text {
+    display: inline;
+  }
+}
+
 ]]></b:skin>
   <b:else/>
     <b:template-skin><![CDATA[
@@ -1004,25 +1054,28 @@ a:hover::after {
         <b:if cond='data:src'>
           <b:with value='data:src.isYoutube ? data:src.youtubeMaxResDefaultUrl : data:src' var='source'>
           <b:with value='(data:resize ? resizeImage(data:source, data:resize, data:ratio) : (data:source))' var='image'>
-            <b:tag expr:alt='data:alt ?: data:messages.image' name='img'>
-              <b:attr name='b:whitespace' value='remove'/>
-              <b:attr expr:value='data:id' name='id'/>
-              <b:class cond='data:class' expr:name='data:class'/>
-              <b:attr expr:value='data:width ?: data:image.width' name='width'/>
-              <b:attr expr:value='data:height ?: data:image.height' name='height'/>
-              <b:attr expr:value='data:sizes' name='sizes'/>
-              <b:attr expr:value='data:loading ?: &quot;lazy&quot;' name='loading'/>
-                            <b:attr expr:value='data:fetchpriority ?: &quot;auto&quot;' name='fetchpriority'/>
-              <b:attr name='decoding' value='async'/>
-              <b:with value='[ &quot;content.com/img/a/&quot;, &quot;content.com/blogger_img_proxy&quot; ]' var='servers'>
-              <b:with value='data:params and (data:servers any (server =&gt; server in data:image)) ? (&quot;-&quot; + data:params) : &quot;&quot;' var='params'>
-                <b:attr expr:value='(data:srcset ? resizeImage(data:image, data:srcset.first, data:ratio) : data:image) + data:params' name='src'/>
-              </b:with>
-              </b:with>
-              <b:if cond='data:srcset'>
-                <b:attr expr:value='sourceSet(data:image, data:srcset, data:ratio)' name='srcset'/>
-              </b:if>
-            </b:tag>
+            <b:with value='data:class contains &quot;lazyload&quot;' var='isLazy'>
+              <b:tag expr:alt='data:alt ?: data:messages.image' name='img'>
+                <b:attr name='b:whitespace' value='remove'/>
+                <b:attr expr:value='data:id' name='id'/>
+                <b:class cond='data:class' expr:name='data:class'/>
+                <b:attr expr:value='data:width ?: data:image.width' name='width'/>
+                <b:attr expr:value='data:height ?: data:image.height' name='height'/>
+                <b:attr expr:value='data:sizes' name='sizes'/>
+                <b:attr expr:value='data:loading ?: &quot;lazy&quot;' name='loading'/>
+                <b:attr expr:value='data:fetchpriority ?: &quot;auto&quot;' name='fetchpriority'/>
+                <b:attr name='decoding' value='async'/>
+                <b:with value='[ &quot;content.com/img/a/&quot;, &quot;content.com/blogger_img_proxy&quot; ]' var='servers'>
+                <b:with value='data:params and (data:servers any (server =&gt; server in data:image)) ? (&quot;-&quot; + data:params) : &quot;&quot;' var='params'>
+                  <b:attr expr:name='data:isLazy ? &quot;data-src&quot; : &quot;src&quot;' expr:value='(data:srcset ? resizeImage(data:image, data:srcset.first, data:ratio) : data:image) + data:params'/>
+                  <b:attr cond='data:isLazy' name='src' value='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='/>
+                  <b:if cond='data:srcset'>
+                    <b:attr expr:name='data:isLazy ? &quot;data-srcset&quot; : &quot;srcset&quot;' expr:value='sourceSet(data:image, data:srcset, data:ratio)'/>
+                  </b:if>
+                </b:with>
+                </b:with>
+              </b:tag>
+            </b:with>
           </b:with>
           </b:with>
         <b:else/>
@@ -1092,6 +1145,10 @@ a:hover::after {
             <symbol id='icon-search' viewBox='0 0 24 24'><circle cx='10' cy='10' r='7'/><path d='m15 15 6 6'/></symbol>
             <symbol id='icon-arrow-left-long' viewBox='0 0 24 24'><path d='m6 9-3 3 3 3m15-3H3'/></symbol>
             <symbol id='icon-arrow-right-long' viewBox='0 0 24 24'><path d='m18 9 3 3-3 3M3 12h18'/></symbol>
+            <symbol id='icon-brand-x' viewBox='0 0 24 24'><path d='M4 4l11.733 16h4.267l-11.733 -16z'/><path d='M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772'/></symbol>
+            <symbol id='icon-brand-facebook' viewBox='0 0 24 24'><path d='M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3'/></symbol>
+            <symbol id='icon-brand-reddit' viewBox='0 0 24 24'><path d='M12 8c2.648 0 5.028 .826 6.675 2.14a2.5 2.5 0 0 1 2.326 4.36c0 3.59 -4.03 6.5 -9 6.5c-4.875 0 -8.845 -2.8 -9 -6.294l-1 -.206a2.5 2.5 0 0 1 2.326 -4.36c1.646 -1.313 4.026 -2.14 6.674 -2.14z'/><path d='M12 8l1 -5l6 1'/><path d='M19 4m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0'/><circle cx='9' cy='13' r='.5' fill='currentColor'/><circle cx='15' cy='13' r='.5' fill='currentColor'/><path d='M10 17c.667 .333 1.333 .5 2 .5s1.333 -.167 2 -.5'/></symbol>
+            <symbol id='icon-link' viewBox='0 0 24 24'><path d='M9 15l6 -6'/><path d='M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464'/><path d='M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463'/></symbol>
           </svg>
         </div>
       </b:includable>
@@ -1264,7 +1321,7 @@ a:hover::after {
               <b:if cond='data:post.featuredImage'>
                 <b:with value='data:post.featuredImage.isYoutube' var='isYoutube'>
                   <b:class name='has-image'/>
-                  <b:include data='{ class: &quot;card-image&quot;, src: data:post.featuredImage, resize: (data:isYoutube ? 600 : 420), ratio: (data:isYoutube ? &quot;16:9&quot; : &quot;4:3&quot;), params: data:skin.vars.c_imageParams, loading: (data:i == 1 ? &quot;eager&quot; : &quot;lazy&quot;), fetchpriority: (data:i == 1 ? &quot;high&quot; : &quot;auto&quot;), decoding: &quot;async&quot; }' name='@image'/>
+                  <b:include data='{ class: &quot;card-image lazyload&quot;, src: data:post.featuredImage, resize: (data:isYoutube ? 600 : 420), ratio: (data:isYoutube ? &quot;16:9&quot; : &quot;4:3&quot;), params: data:skin.vars.c_imageParams, loading: &quot;lazy&quot; }' name='@image'/>
                 </b:with>
               </b:if>
               <div class='card-meta'>
@@ -1534,6 +1591,76 @@ a:hover::after {
           </b:with>
         </b:if>
       </b:includable>
+      <b:includable id='post:share-buttons' var='post'>
+        <div class='share-buttons'>
+          <h3 class='share-buttons-title'>Share This Post</h3>
+          <div class='share-buttons-list'>
+            <a class='share-button twitter' expr:href='&quot;https://twitter.com/intent/tweet?url=&quot; + data:post.url.canonical + &quot;&amp;text=&quot; + data:post.title.escaped' rel='noopener noreferrer' target='_blank' title='Share on X'>
+              <svg class='i'><use href='#icon-brand-x'/></svg>
+              <span class='share-button-text'>Share on X</span>
+            </a>
+            <a class='share-button facebook' expr:href='&quot;https://www.facebook.com/sharer/sharer.php?u=&quot; + data:post.url.canonical' rel='noopener noreferrer' target='_blank' title='Share on Facebook'>
+              <svg class='i'><use href='#icon-brand-facebook'/></svg>
+              <span class='share-button-text'>Share on Facebook</span>
+            </a>
+            <a class='share-button reddit' expr:href='&quot;https://www.reddit.com/submit?url=&quot; + data:post.url.canonical + &quot;&amp;title=&quot; + data:post.title.escaped' rel='noopener noreferrer' target='_blank' title='Share on Reddit'>
+              <svg class='i'><use href='#icon-brand-reddit'/></svg>
+              <span class='share-button-text'>Share on Reddit</span>
+            </a>
+            <button class='share-button copy-link-button' expr:data-url='data:post.url.canonical' title='Copy link'>
+              <svg class='i'><use href='#icon-link'/></svg>
+              <span class='share-button-text'>Copy Link</span>
+            </button>
+          </div>
+        </div>
+        <script>
+        //<![CDATA[
+          (function() {
+            var copyButton = document.querySelector('.post .copy-link-button');
+            if (!copyButton) return;
+
+            copyButton.addEventListener('click', function(event) {
+              event.preventDefault();
+              var url = this.getAttribute('data-url');
+              if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(url).then(function() {
+                  var originalText = copyButton.querySelector('.share-button-text').textContent;
+                  copyButton.querySelector('.share-button-text').textContent = 'Copied!';
+                  copyButton.disabled = true;
+                  setTimeout(function() {
+                    copyButton.querySelector('.share-button-text').textContent = originalText;
+                    copyButton.disabled = false;
+                  }, 2000);
+                }).catch(function(err) {
+                  console.error('Could not copy text: ', err);
+                });
+              } else {
+                var textArea = document.createElement("textarea");
+                textArea.value = url;
+                textArea.style.position="fixed";
+                textArea.style.left="-9999px";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                  document.execCommand('copy');
+                  var originalText = copyButton.querySelector('.share-button-text').textContent;
+                  copyButton.querySelector('.share-button-text').textContent = 'Copied!';
+                  copyButton.disabled = true;
+                  setTimeout(function() {
+                    copyButton.querySelector('.share-button-text').textContent = originalText;
+                    copyButton.disabled = false;
+                  }, 2000);
+                } catch (err) {
+                  console.error('Fallback: Oops, unable to copy', err);
+                }
+                document.body.removeChild(textArea);
+              }
+            });
+          })();
+        //]]>
+        </script>
+      </b:includable>
       <b:includable id='post:view'>
         <b:include name='post:breadcrumbs'/>
         <header class='post-header'>
@@ -1547,6 +1674,7 @@ a:hover::after {
           <data:post.body/>
           <b:include name='post:ads2'/>
         </section>
+        <b:include data='post' name='post:share-buttons'/>
         <b:include data='post' name='post:related'/>
         <footer class='post-comment'>
           <b:include data='{ depth: 2, texts: { delete: data:skin.vars.t_delete, reply: data:skin.vars.t_reply } }' name='comment:main'/>
@@ -2155,9 +2283,29 @@ window.addEventListener(&#39;scroll&#39;, function() {
   <div id='no-results'>No results found. Try a different search.</div>
 </b:if>
 
+<script async='' src='https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js'/>
+<script>
+//<![CDATA[
+  function adaptPostBodyImages() {
+    var postBody = document.querySelector('.post-body');
+    if (!postBody) return;
+    var images = postBody.querySelectorAll('img');
+    images.forEach(function(img) {
+      var imgSrc = img.getAttribute('src');
+      if (imgSrc && !imgSrc.startsWith('data:image/') && !img.classList.contains('lazyloaded')) {
+        img.classList.add('lazyload');
+        img.setAttribute('data-src', imgSrc);
+        img.setAttribute('src', 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==');
+      }
+    });
+  }
+  // Run after page is interactive
+  document.addEventListener('DOMContentLoaded', adaptPostBodyImages);
+//]]>
+</script>
 <script>
 (function() {
-  &#39;use strict&#39;;
+  'use strict';
   function initBackToTop() {
     const btn = document.getElementById(&#39;back-to-top&#39;);
     if (!btn) return;

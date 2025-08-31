@@ -257,6 +257,10 @@
 
 .post-body :where(h1,h2,h3,h4,h5,h6){font-family:var(--font-title-family);color:var(--color-title)}
 
+.post-body h2, .post-body h3, .post-body h4 {
+  margin-top: 2.5rem;
+}
+
 .post-comment{margin-top:2rem}
 
 .searchbox{pointer-events:var(--switch-search,none);opacity:var(--switch-search,0);transform:translate(-50%,var(--switch-search-position,0%));transition:opacity var(--transition-config),transform var(--transition-config);z-index:10;width:100%;max-width:500px;padding-left:2rem;padding-right:2rem;position:fixed;top:50%;left:50%}
@@ -620,6 +624,12 @@ html { scroll-behavior: smooth; }
 
 /* --- IndieKings Visual Polish Layer --- */
 
+:root {
+  --accent: #ff006e; /* secondary accent for gaming vibe */
+  --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+  --gpu-acceleration: translateZ(0);
+}
+
 /* Typography */
 .card-content .card-snippet {
   font-size: 1rem; /* bump readability */
@@ -631,29 +641,24 @@ html { scroll-behavior: smooth; }
   }
 }
 
-/* Whitespace between cards */
+/* Whitespace between cards & Hover Effect */
 .card {
   margin-bottom: 2rem;
+  transition: transform 0.25s var(--transition-timing), box-shadow 0.25s var(--transition-timing);
 }
+
+.card:hover {
+  transform: translateY(-5px) var(--gpu-acceleration);
+  box-shadow: 0 10px 20px -5px rgba(0,0,0,0.15), 0 4px 6px -2px rgba(0,0,0,0.05);
+}
+
 @media (min-width: 769px) {
   .cards {
     gap: 2rem;
   }
 }
 
-/* Card hover effects */
-.card.has-image {
-  transition: transform 0.3s var(--transition-timing), box-shadow 0.3s var(--transition-timing);
-}
-.card.has-image:hover {
-  transform: translateY(-6px) var(--gpu-acceleration);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-}
-
 /* Brand accent */
-:root {
-  --accent: #ff006e; /* secondary accent for gaming vibe */
-}
 a:hover, .labels-link:hover, .pager-button:hover {
   color: var(--accent);
 }

@@ -2367,11 +2367,11 @@ window.addEventListener(&#39;scroll&#39;, function() {
 }, { passive: true });
 </script>
 
-<b:if cond='data:view.isSearch and not data:posts'>
+<b:if cond='data:view.search.query and not data:posts'>
   <div id='no-results'>No results found. Try a different search.</div>
 </b:if>
 
-<script async='async' src='https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min..js'/>
+<script async='async' src='https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js'/>
 <script>
 //<![CDATA[
   function adaptPostBodyImages() {

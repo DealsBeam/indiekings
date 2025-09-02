@@ -221,15 +221,22 @@
 
 .header-subtitle{color:var(--color-header-subtitle);font-size:1.25rem}
 
-.header-bars{left:2rem}
-
-.header-bars:before{pointer-events:var(--switch-bars,none);opacity:var(--switch-bars,0)}
-
 .header-search{right:2rem}
 
 .header-search:before{pointer-events:var(--switch-search,none);opacity:var(--switch-search,0)}
 
 .header .google-auto-placed{display:none!important}
+
+.links-header {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: .5rem 0;
+}
+.links-header .links-link .i {
+  width: 28px;
+  height: 28px;
+}
 
 .i{stroke-width:var(--i-stroke,2);width:var(--i-size,24px);height:var(--i-size,24px);stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;fill:none}
 
@@ -288,17 +295,11 @@
 
 .searchbox-input:focus{border-color:var(--primary);outline:none}
 
-.sidebar{transform:translateX(var(--switch-sidebar-position,-100%));transition:transform var(--transition-config);width:var(--sidebar-width);background-color:var(--bg-sidebar);z-index:10;padding:var(--sidebar-gap);position:fixed;inset:0;overflow-y:auto}
-
-.sidebar>*+*{border-top:1px solid var(--color-border);padding-top:var(--sidebar-gap);margin-top:var(--sidebar-gap)}
-
 .switch{color:#fff;cursor:pointer;position:absolute;top:2rem}
 
 .switch:before{transition:opacity var(--transition-config);cursor:default;content:"";z-index:5;background-color:#00000080;position:fixed;inset:0}
 
 .switch-control{display:none}
-
-.switch-sidebar:checked~:where(.offcanvas,.header){--switch-sidebar-position:0;--switch-bars:1}
 
 .switch-search:checked~:where(.offcanvas,.header){--switch-search-position:-50%;--switch-search:1}
 
@@ -557,13 +558,8 @@
     min-height: 44px;
     padding: 12px 16px;
   }
-  .header-bars,
   .header-search {
     padding: 12px;
-  }
-  .sidebar {
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
   }
 }
 
@@ -1188,13 +1184,14 @@ a:hover::after {
               <line fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' x1='18.36' x2='19.78' y1='5.64' y2='4.22'/>
             </symbol>
             <symbol id='icon-circle-check' viewBox='0 0 24 24'><circle cx='12' cy='12' r='10'/><path d='m8.5 12.5 2 2 5-5'/></symbol>
-            <symbol id='icon-bars' viewBox='0 0 24 24'><path d='M3 6h18M3 12h18M3 18h18'/></symbol>
             <symbol id='icon-search' viewBox='0 0 24 24'><circle cx='10' cy='10' r='7'/><path d='m15 15 6 6'/></symbol>
             <symbol id='icon-arrow-left-long' viewBox='0 0 24 24'><path d='m6 9-3 3 3 3m15-3H3'/></symbol>
             <symbol id='icon-arrow-right-long' viewBox='0 0 24 24'><path d='m18 9 3 3-3 3M3 12h18'/></symbol>
             <symbol id='icon-brand-x' viewBox='0 0 24 24'><path d='M4 4l11.733 16h4.267l-11.733 -16z'/><path d='M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772'/></symbol>
             <symbol id='icon-brand-facebook' viewBox='0 0 24 24'><path d='M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3'/></symbol>
             <symbol id='icon-brand-reddit' viewBox='0 0 24 24'><path d='M12 8c2.648 0 5.028 .826 6.675 2.14a2.5 2.5 0 0 1 2.326 4.36c0 3.59 -4.03 6.5 -9 6.5c-4.875 0 -8.845 -2.8 -9 -6.294l-1 -.206a2.5 2.5 0 0 1 2.326 -4.36c1.646 -1.313 4.026 -2.14 6.674 -2.14z'/><path d='M12 8l1 -5l6 1'/><path d='M19 4m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0'/><circle cx='9' cy='13' fill='currentColor' r='.5'/><circle cx='15' cy='13' fill='currentColor' r='.5'/><path d='M10 17c.667 .333 1.333 .5 2 .5s1.333 -.167 2 -.5'/></symbol>
+            <symbol id='icon-brand-steam' viewBox='0 0 16 16'><path d='M.329 10.333A8.01 8.01 0 0 0 7.99 16C12.414 16 16 12.418 16 8s-3.586-8-8.009-8A8.006 8.006 0 0 0 0 7.468l.003.006 4.304 1.769A2.2 2.2 0 0 1 5.62 8.88l1.96-2.844-.001-.04a3.046 3.046 0 0 1 3.042-3.043 3.046 3.046 0 0 1 3.042 3.043 3.047 3.047 0 0 1-3.111 3.044l-2.804 2a2.223 2.223 0 0 1-3.075 2.11 2.22 2.22 0 0 1-1.312-1.568L.33 10.333Z'/><path d='M4.868 12.683a1.715 1.715 0 0 0 1.318-3.165 1.7 1.7 0 0 0-1.263-.02l1.023.424a1.261 1.261 0 1 1-.97 2.33l-.99-.41a1.7 1.7 0 0 0 .882.84Zm3.726-6.687a2.03 2.03 0 0 0 2.027 2.029 2.03 2.03 0 0 0 2.027-2.029 2.03 2.03 0 0 0-2.027-2.027 2.03 2.03 0 0 0-2.027 2.027m2.03-1.527a1.524 1.524 0 1 1-.002 3.048 1.524 1.524 0 0 1 .002-3.048'/></symbol>
+            <symbol id='icon-brand-twitch' viewBox='0 0 16 16'><path d='M3.857 0 1 2.857v10.286h3.429V16l2.857-2.857H9.57L14.714 8V0zm9.714 7.429-2.285 2.285H9l-2 2v-2H4.429V1.143h9.142z'/><path d='M11.857 3.143h-1.143V6.57h1.143zm-3.143 0H7.571V6.57h1.143z'/></symbol>
             <symbol id='icon-link' viewBox='0 0 24 24'><path d='M9 15l6 -6'/><path d='M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464'/><path d='M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463'/></symbol>
             <symbol id='icon-clock' viewBox='0 0 24 24'><path d='M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0'/><path d='M12 7v5l3 3'/></symbol>
             <symbol id='icon-arrow-up' viewBox='0 0 24 24'><path d='M12 5l0 14'/><path d='M18 11l-6 -6'/><path d='M6 11l6 -6'/></symbol>
@@ -1903,9 +1900,6 @@ a:hover::after {
           <data:messages.theresNothingHere/>
         <b:else/>
           <b:attr name='class' value='header-wrapper'/>
-          <label class='header-bars switch' for='show-sidebar'>
-            <svg class='i i-bars'><use href='#icon-bars'/></svg>
-          </label>
           <div class='container'>
             <b:if cond='data:image'>
               <a class='header-logo' expr:href='data:blog.homepageUrl'>
@@ -1959,8 +1953,18 @@ a:hover::after {
         <div class='links'>
           <b:class cond='data:widget.sectionId == &quot;header&quot;' name='links-header'/>
           <b:loop values='data:links' var='link'>
-            <a class='links-link' expr:href='data:link.target'>
-              <data:link.name/>
+            <a class='links-link' expr:href='data:link.target' expr:title='data:link.name' rel='noopener noreferrer' target='_blank'>
+              <b:if cond='data:link.target contains &quot;twitter&quot;'>
+                <svg class='i' viewBox='0 0 24 24'><use href='#icon-brand-x'/></svg>
+              <b:elseif cond='data:link.target contains &quot;facebook&quot;'/>
+                <svg class='i' viewBox='0 0 24 24'><use href='#icon-brand-facebook'/></svg>
+              <b:elseif cond='data:link.target contains &quot;steam&quot;'/>
+                <svg class='i' viewBox='0 0 16 16'><use href='#icon-brand-steam'/></svg>
+              <b:elseif cond='data:link.target contains &quot;twitch&quot;'/>
+                <svg class='i' viewBox='0 0 16 16'><use href='#icon-brand-twitch'/></svg>
+              <b:else/>
+                <data:link.name/>
+              </b:if>
             </a>
           </b:loop>
         </div>
@@ -2046,70 +2050,8 @@ a:hover::after {
   <b:include name='global:svg-sprite'/>
   <b:include name='@kind'/>
   <b:tag class='layout-edit' cond='data:view.isLayoutMode and data:skin.vars.a_layoutEdit' name='div'>
-  <input class='switch-control switch-sidebar' id='show-sidebar' name='offcanvas' type='checkbox'/>
   <input class='switch-control switch-search' id='show-search' name='offcanvas' type='checkbox'/>
   <div class='offcanvas layout-section'>
-    <b:section ads='true' class='sidebar' id='sidebar'>
-      <b:widget id='PageList1' locked='false' title='' type='PageList' visible='true'>
-        <b:widget-settings>
-          <b:widget-setting name='pageListJson'><![CDATA[{"279431011992118528":{"href":"https://www.indiekings.com/p/about-us.html","position":2,"title":"About Us"},"6013038015089484295":{"href":"https://www.indiekings.com/p/bundle-tracker.html","position":1,"title":"Game Bundles &amp; Deals Tracker"},"9012680494201585843":{"href":"https://www.indiekings.com/p/contact.html","position":6,"title":"Contact"},"link0":{"href":"http://www.indiekings.com/","position":0,"title":"Home"},"841670227747070283":{"href":"https://www.indiekings.com/p/affiliate-disclosure.html","position":5,"title":"Affiliate Disclosure"},"55763874068235413":{"href":"https://www.indiekings.com/p/terms-of-service.html","position":4,"title":"Terms of Service"},"2470448834020771711":{"href":"https://www.indiekings.com/p/privacy-policy.html","position":3,"title":"Privacy Policy"}}]]></b:widget-setting>
-          <b:widget-setting name='homeTitle'>Home</b:widget-setting>
-        </b:widget-settings>
-        <b:includable id='main' var='this'>
-        <b:include name='widget-title'/>
-        <b:include name='content'/>
-      </b:includable>
-        <b:includable id='content'>
-        <div class='widget-content'>
-          <b:include expr:name='&quot;widget:&quot; + data:widget.type'/>
-        </div>
-      </b:includable>
-        <b:includable id='overflowButton'/>
-        <b:includable id='overflowablePageList'/>
-        <b:includable id='pageLink'/>
-        <b:includable id='pageList'/>
-      </b:widget>
-      <b:widget id='Label1' locked='false' title='Labels' type='Label' visible='false'>
-        <b:widget-settings>
-          <b:widget-setting name='sorting'>ALPHA</b:widget-setting>
-          <b:widget-setting name='display'>LIST</b:widget-setting>
-          <b:widget-setting name='selectedLabelsList'/>
-          <b:widget-setting name='showType'>ALL</b:widget-setting>
-          <b:widget-setting name='showFreqNumbers'>false</b:widget-setting>
-        </b:widget-settings>
-        <b:includable id='main' var='this'>
-        <b:include name='widget-title'/>
-        <b:include name='content'/>
-      </b:includable>
-        <b:includable id='cloud'/>
-        <b:includable id='content'>
-        <div class='widget-content'>
-          <b:include expr:name='&quot;widget:&quot; + data:widget.type'/>
-        </div>
-      </b:includable>
-        <b:includable id='list'/>
-      </b:widget>
-      <b:widget id='Image1' locked='false' title='' type='Image' visible='false'>
-        <b:widget-settings>
-          <b:widget-setting name='displayUrl'>https://blogger.googleusercontent.com/img/a/AVvXsEgv5K1FSeycHol8-62_s6kPkfoYcqlI2wN0IMWKkcAUhIHx0Eeyf-UGErQ-GNTi-XmNjHn7DFmQwUmbVWdlJX7WsjH_NzRWp2PknXXHX4hGhxo6Bei9zRAINjO3iCsoUMxyxkVKw0YJPyh7VUsm7VrdHIUS2oEHLj_vD5p_zD-YNWHSZlnzq-6c-6uQ3oY=s386</b:widget-setting>
-          <b:widget-setting name='displayHeight'>100</b:widget-setting>
-          <b:widget-setting name='sectionWidth'>386</b:widget-setting>
-          <b:widget-setting name='shrinkToFit'>true</b:widget-setting>
-          <b:widget-setting name='displayWidth'>386</b:widget-setting>
-          <b:widget-setting name='link'>https://amzn.to/3QmJKJM</b:widget-setting>
-          <b:widget-setting name='caption'/>
-        </b:widget-settings>
-        <b:includable id='main' var='this'>
-        <b:include name='widget-title'/>
-        <b:include name='content'/>
-      </b:includable>
-        <b:includable id='content'>
-        <div class='widget-content'>
-          <b:include expr:name='&quot;widget:&quot; + data:widget.type'/>
-        </div>
-      </b:includable>
-      </b:widget>
-    </b:section>
     <form class='searchbox' expr:action='data:blog.searchUrl' method='get' tabindex='-1'>
       <input autocomplete='off' class='searchbox-input' expr:placeholder='data:view.search.query.escaped ?: data:messages.search' name='q' spellcheck='false' type='text'/>
     </form>
@@ -2140,6 +2082,25 @@ a:hover::after {
           <b:includable id='description'/>
           <b:includable id='image'/>
           <b:includable id='title'/>
+        </b:widget>
+        <b:widget id='PageList1' locked='false' title='' type='PageList' visible='true'>
+          <b:widget-settings>
+            <b:widget-setting name='pageListJson'><![CDATA[{"279431011992118528":{"href":"https://www.indiekings.com/p/about-us.html","position":2,"title":"About Us"},"6013038015089484295":{"href":"https://www.indiekings.com/p/bundle-tracker.html","position":1,"title":"Game Bundles & Deals Tracker"},"9012680494201585843":{"href":"https://www.indiekings.com/p/contact.html","position":6,"title":"Contact"},"link0":{"href":"http://www.indiekings.com/","position":0,"title":"Home"},"841670227747070283":{"href":"https://www.indiekings.com/p/affiliate-disclosure.html","position":5,"title":"Affiliate Disclosure"},"55763874068235413":{"href":"https://www.indiekings.com/p/terms-of-service.html","position":4,"title":"Terms of Service"},"2470448834020771711":{"href":"https://www.indiekings.com/p/privacy-policy.html","position":3,"title":"Privacy Policy"}}]]></b:widget-setting>
+            <b:widget-setting name='homeTitle'>Home</b:widget-setting>
+          </b:widget-settings>
+          <b:includable id='main' var='this'>
+        <b:include name='widget-title'/>
+        <b:include name='content'/>
+      </b:includable>
+          <b:includable id='content'>
+        <div class='widget-content'>
+          <b:include expr:name='&quot;widget:&quot; + data:widget.type'/>
+        </div>
+      </b:includable>
+          <b:includable id='overflowButton'/>
+          <b:includable id='overflowablePageList'/>
+          <b:includable id='pageLink'/>
+          <b:includable id='pageList'/>
         </b:widget>
         <b:widget id='LinkList1' locked='false' title='' type='LinkList' visible='true'>
           <b:widget-settings>
@@ -2410,7 +2371,7 @@ window.addEventListener(&#39;scroll&#39;, function() {
   <div id='no-results'>No results found. Try a different search.</div>
 </b:if>
 
-<script async='async' src='https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js'/>
+<script async='async' src='https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min..js'/>
 <script>
 //<![CDATA[
   function adaptPostBodyImages() {
